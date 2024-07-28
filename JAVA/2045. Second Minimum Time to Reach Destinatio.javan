@@ -1,0 +1,45 @@
+class Solution {
+    public int secondMinimum(int n, int[][] edges, int time, int change) {
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i <= n; i++) {
+            graph.add(new ArrayList<>());
+        }
+        for (int[] edge : edges) {
+            graph.get(edge[0]).add(edge[1]);
+            graph.get(edge[1]).add(edge[0]);
+        }
+        PriorityQueue<int[]> queue = new PriorityQueue<>((a, b) -> a[0] - b[0]);
+        queue.offer(new int[] {0, 1});
+        int[] minTime = new int[n + 1];
+        Arrays.fill(minTime, Integer.MAX_VALUE);
+        int[] secondMinTime = new int[n + 1];
+        Arrays.fill(secondMinTime, Integer.MAX_VALUE);
+        minTime[1] = 0;
+        while (!queue.isEmpty()) {
+            int[] curr = queue.poll();
+            int t = curr[0];
+            int node = curr[1];
+            if (node == n && t > minTime[n]) {
+                return t;
+            }
+            if (t > secondMinTime[node]) {
+                continue;
+            }
+            for (int neighbor : graph.get(node)) {
+                int newTime = t + time;
+                if ((t / change) % 2 == 1) {
+                    newTime = (t / change + 1) * change + time;
+                }
+                if (newTime < minTime[neighbor]) {
+                    secondMinTime[neighbor] = minTime[neighbor];
+                    minTime[neighbor] = newTime;
+                    queue.offer(new int[] {newTime, neighbor});
+                } else if (newTime > minTime[neighbor] && newTime < secondMinTime[neighbor]) {
+                    secondMinTime[neighbor] = newTime;
+                    queue.offer(new int[] {newTime, neighbor});
+                }
+            }
+        }
+        return -1;  
+    }
+}
