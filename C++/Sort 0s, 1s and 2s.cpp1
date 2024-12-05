@@ -1,0 +1,22 @@
+class Solution {
+  public:
+    void sort012(vector<int>& arr) {
+        int z=0,o=0,h=arr.size()-1;
+        int i=0;
+        while(o<=h)
+        {
+            if(arr[o]==0)
+             {
+                 swap(arr[o],arr[z]);
+                 z++;
+                 o++; 
+             }
+            else if( arr[o]==1)
+            o++;
+            else if(arr[o]==2){
+                swap(arr[o],arr[h]);
+                h--;
+            }
+        }
+    }
+};
